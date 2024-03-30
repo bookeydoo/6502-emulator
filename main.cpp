@@ -24,6 +24,10 @@ byte operator[](u32 Address)const{
     return data[Address];
 }
 
+byte& operator[](u32 address)
+{
+return data[address];
+}
 };
 
 
@@ -60,15 +64,39 @@ byte fetch(u32 &cycles, mem& memory){
 byte last_inst= memory[PC];
 PC++;
 cycles--;
-
-
 }
+
+
+
+//opcodes
+static constexpr byte 
+INS_LDA_IM=0xA9;
+ 
+
 //read 1 byte
-void execute( u32 &cycles,mem& memory){       // number of cycles , memory used 
+void execute( u32 cycles,mem& memory){       // number of cycles , memory used 
 
 while(cycles >0){ //consider here addres is <MAX_MEM
     byte ins=fetch(cycles,memory);
+    switch(ins)
+    
+    {
+    case INS_LDA_IM:{
+        byte value =fetch(cycles,memory);
+        A=value;
+        Z=(A==0);
+        neg=(A & 0b10000000)>0;
+
+    }break;
+     default :{
+
+        printf("instruction unhandled %d", ins);
+
+    }break;
+
+    }
 }
+
 
 }
 
@@ -82,8 +110,13 @@ CPU cpu;
 u32 x; // number of cycles
 scanf("%d",&x); 
 
+
+memory[ 0xFFFC ]=cpu.INS_LDA_IM;
+memory[0xFFFD]=0x42;
 cpu.Reset(memory);
 cpu.execute(x,memory);
+cpu.execute(3,memory);
+
 
 
 
