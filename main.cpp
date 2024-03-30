@@ -19,6 +19,11 @@ void init(){
 
     }
 }
+byte operator[](u32 Address)const{
+
+    return data[Address];
+}
+
 };
 
 
@@ -41,13 +46,29 @@ byte Overflow:1; //overflow flag
 byte neg:1; //negative flag
 
 
-void Reset(mem memory){
+void Reset(mem& memory){
 
 PC=0xFFFC;
 SP=0x0100;
 C=Z= B= Overflow= neg=ID=0;
 A=X=Y=0;
+memory.init();
 
+}
+
+byte fetch(u32 &cycles, mem& memory){
+byte last_inst= memory[PC];
+PC++;
+cycles--;
+
+
+}
+//read 1 byte
+void execute( u32 &cycles,mem& memory){       // number of cycles , memory used 
+
+while(cycles >0){ //consider here addres is <MAX_MEM
+    byte ins=fetch(cycles,memory);
+}
 
 }
 
@@ -57,8 +78,12 @@ A=X=Y=0;
 int main(){
 mem memory;
 CPU cpu;
-cpu.Reset(memory);
 
+u32 x; // number of cycles
+scanf("%d",&x); 
+
+cpu.Reset(memory);
+cpu.execute(x,memory);
 
 
 
